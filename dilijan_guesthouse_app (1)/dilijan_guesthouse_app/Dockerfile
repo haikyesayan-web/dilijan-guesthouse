@@ -1,0 +1,8 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY . /app
+ENV GH_HOST=0.0.0.0
+ENV GH_PORT=8000
+ENV GH_COOKIE_SECURE=0
+EXPOSE 8000
+CMD ["python3", "server.py"]

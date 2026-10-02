@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6b4f">
+  <meta name="description" content="Shared booking manager for Dilijan Guesthouse">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <title>Dilijan Guesthouse Bookings</title>
+  <style>
+    :root{color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f4ef;--card:#fff;--tx:#1f2a24;--mut:#6b756f;--bd:#e2ded3;--ac:#2f6b4f;--acText:#fff;--warn:#b3261e;--shadow:0 1px 2px rgba(31,42,36,.04)}
+    @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171b18;--card:#222823;--tx:#eef1ee;--mut:#9aa59e;--bd:#343c36;--ac:#6fbf94;--warn:#ff8a80;--shadow:none}}
+    :root[data-theme="dark"]{--bg:#171b18;--card:#222823;--tx:#eef1ee;--mut:#9aa59e;--bd:#343c36;--ac:#6fbf94;--warn:#ff8a80;--shadow:none}
+    :root[data-theme="light"]{color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-padding-top:env(safe-area-inset-top,0px)}
+    body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,input,select,textarea{font:inherit}
+    button{touch-action:manipulation}
+    .wrap{max-width:760px;margin:0 auto;padding:16px}
+    .hd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:4px 0 12px}
+    h1{font-size:20px;margin:0;letter-spacing:-.01em}
+    .hd-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .lang{display:flex;gap:4px}
+    .lang button,.theme button{padding:6px 9px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;cursor:pointer;font-size:13px}
+    .lang button.on,.theme button.on{background:var(--ac);color:var(--acText);border-color:var(--ac)}
+    .status{font-size:13px;color:var(--mut);margin-bottom:8px;min-height:19px}
+    .tabs{display:flex;gap:8px;margin-bottom:14px}
+    .tabs button{flex:1;padding:11px 6px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font-size:14px;cursor:pointer}
+    .tabs button.on{background:var(--ac);color:var(--acText);border-color:var(--ac)}
+    .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+    label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+    input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:9px;background:var(--bg);color:var(--tx);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 18%,transparent)}
+    input[readonly]{opacity:.75}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:520px){.row{grid-template-columns:1fr}.hd{align-items:flex-start}.hd-actions{max-width:55%}}
+    .btn{padding:12px 16px;border:0;border-radius:10px;background:var(--ac);color:var(--acText);font-size:16px;cursor:pointer;width:100%;margin-top:14px;font-weight:600}
+    .btn.sec{background:transparent;color:var(--tx);border:1px solid var(--bd);width:auto;margin:0;padding:7px 10px;font-size:13px;font-weight:500}
+    .btn.danger{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 35%,var(--bd))}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:12px;color:#fff;white-space:nowrap}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+    .name{font-weight:700;font-size:17px}
+    .mut{color:var(--mut);font-size:14px}
+    .warn{color:var(--warn);font-size:14px;margin-top:7px;font-weight:600}
+    .cancel{opacity:.55;text-decoration:line-through}
+    .acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+    .filters{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding:2px 1px 5px;scrollbar-width:thin}
+    .filters button{white-space:nowrap;padding:7px 12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;cursor:pointer}
+    .filters button.on{background:var(--ac);color:var(--acText);border-color:var(--ac)}
+    .filter-platform{display:inline-flex;align-items:center;gap:6px}
+    .mini-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .empty{padding:18px;text-align:center}
+    .help h3{margin:18px 0 6px}.help h3:first-child{margin-top:0}.help li{margin-bottom:6px}
+    .auth-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .auth{width:min(100%,460px)}
+    .auth h2{margin:0 0 4px}
+    .auth .subtitle{color:var(--mut);margin:0 0 16px}
+    .error{color:var(--warn);font-size:14px;margin-top:10px}
+    .success{color:var(--ac);font-size:14px;margin-top:10px}
+    .small{font-size:12px;color:var(--mut)}
+    .toolbar-line{display:flex;gap:8px;justify-content:space-between;align-items:center;margin:0 0 10px}
+    .user-pill{font-size:12px;padding:5px 9px;border:1px solid var(--bd);border-radius:999px;color:var(--mut);background:var(--card)}
+    .login-links{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px}
+    .team-user{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--bd)}
+    .team-user:first-child{border-top:0}
+    .team-meta{display:flex;flex-direction:column;gap:2px}
+    .role{font-size:12px;color:var(--mut)}
+    .copybox{background:var(--bg);border:1px dashed var(--bd);border-radius:10px;padding:10px;margin-top:10px;font-size:14px;word-break:break-word}
+    .hidden{display:none!important}
+    .install{font-size:13px;color:var(--mut);padding:9px 0 0}
+    .toast{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 13px;border-radius:10px;z-index:50;font-size:13px;box-shadow:0 5px 20px rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="toast" class="toast hidden"></div>
+<script>
+const COLORS={Booking:'#003b95',Airbnb:'#e0245e','list.am':'#e08a00',Instagram:'#8a3ab9',Facebook:'#1877f2',Direct:'#2f6b4f'};
+const PLATS=Object.keys(COLORS);
+const L={
+ en:{title:'Dilijan Guesthouse Bookings',connecting:'Connecting…',live:'✅ Live: everyone sees the same list',reconnecting:'Reconnecting…',tList:'Bookings',tAdd:'+ Add',tHelp:'How to use',tTeam:'Team',newB:'New booking',editB:'Edit booking',guest:'Guest name *',cin:'Check-in *',cout:'Check-out *',plat:'Platform *',room:'Room / unit',ng:'Number of guests',price:'Price (total)',phone:'Guest phone / contact',notes:'Notes',by:'Your name (who is entering this) *',phGuest:'e.g. Anna Petrosyan',phRoom:'e.g. Room 1',phPrice:'e.g. 60000 AMD',phNotes:'Arrival time, breakfast, paid or not, special requests…',phBy:'e.g. Aram',save:'Save booking',saveCh:'Save changes',cancelEdit:'Cancel editing',all:'All',up:'Upcoming',past:'Past',empty:'No bookings here yet. Tap “+ Add” to enter the first one.',nights:'nights',cancelled:'CANCELLED',addedBy:'added by',clash:'⚠ Overlaps with another booking in the same room',edit:'Edit',cancel:'Cancel',restore:'Restore',del:'Delete',Direct:'Direct / Phone',filterDirect:'Direct',fill:'Please fill guest name, dates and your name.',order:'Check-out must be after check-in.',clashQ:(r,g,p)=>`⚠ ${r||'This room'} is already booked on these dates by ${g} (${p}). Save anyway?`,notConn:'Not connected. Please sign in again.',saveErr:'Could not save. Please try again.',permErr:'Could not update this booking. Please try again.',delQ:'Delete this booking completely?',delErr:'Could not delete. Please try again.',cancelQ:'Cancel this booking?',restoreQ:'Restore this booking?',genericErr:'Something went wrong. Please try again.',serverOffline:'Could not connect to the server. Make sure the app is running.',loggedOut:'Logged out',logout:'Log out',owner:'Owner',staff:'Staff',userTitle:'Signed in as',theme:'Theme',system:'System',light:'Light',dark:'Dark',login:'Sign in',username:'Username',password:'Password',firstRun:'Set up the owner account',setupSub:'This runs once on the first launch. The owner can then add staff members.',yourName:'Owner name',createOwner:'Create owner account',loginError:'Invalid username or password.',setupError:'Setup could not be completed. Check the fields and try again.',pwRule:'Password must be at least 8 characters.',userRule:'Username: 3–40 letters, numbers, dot, underscore or hyphen.',installHint:'On a phone, use your browser menu to “Add to Home Screen” for quick access.',howTeam:'For the owner: how to invite the team',teamDesc:'Create a staff account here, then give the employee the username and temporary password. They can sign in from their phone and use the shared list.',addStaff:'Add staff member',staffName:'Staff member name',staffUser:'Staff username',tempPw:'Temporary password',createStaff:'Create staff account',teamEmpty:'No staff members yet.',usernameTaken:'That username is already in use.',staffCreated:'Staff account created.',pwReset:'Change password',newPw:'New password',changePw:'Save new password',passwordChanged:'Password changed.',passwordCopied:'Credentials copied to clipboard.',copyCreds:'Copy credentials',help:`<h3>What is this?</h3><p>One shared list of all guesthouse bookings from every platform. When someone adds a booking here, everybody sees it immediately. No need to write in WhatsApp anymore.</p><h3>How to add a booking</h3><ol><li>Tap <b>+ Add</b>.</li><li>Fill in guest name, check-in, check-out and the <b>platform</b> where the booking came from.</li><li>Add room, price, phone and notes if you have them.</li><li>Write your name and tap <b>Save booking</b>.</li></ol><p>If the same room is already booked on those dates, a red warning appears. Check it before saving so we do not get a double booking.</p><h3>Changing or cancelling</h3><ul><li><b>Edit</b>: fix any detail on a booking.</li><li><b>Cancel</b>: marks the booking as cancelled (crossed out), so everybody knows the dates are free again. It is not deleted.</li><li><b>Delete</b>: removes it completely. Use only for mistakes.</li></ul><h3>Finding bookings</h3><p>Use the platform buttons at the top of the list to see only one platform. <b>Upcoming</b> shows today and future stays; <b>Past</b> shows finished stays.</p><h3>Rules for everybody</h3><ul><li>Add bookings <b>right when you get them</b> from any platform.</li><li>Update immediately if a guest cancels or changes dates.</li><li>Check the list before accepting a new booking.</li></ul><h3>For the owner: how to invite the team</h3><p>Open the <b>Team</b> tab, create a staff account, and give the employee their username and temporary password. Each employee signs in with their own account; all staff then see the same live booking list.</p>`},
+ ru:{title:'Бронирования гостевого дома в Дилижане',connecting:'Подключение…',live:'✅ Онлайн: все видят один и тот же список',reconnecting:'Переподключение…',tList:'Брони',tAdd:'+ Добавить',tHelp:'Инструкция',tTeam:'Команда',newB:'Новая бронь',editB:'Редактирование брони',guest:'Имя гостя *',cin:'Заезд *',cout:'Выезд *',plat:'Платформа *',room:'Комната / номер',ng:'Количество гостей',price:'Цена (всего)',phone:'Телефон / контакт гостя',notes:'Заметки',by:'Ваше имя (кто вносит бронь) *',phGuest:'напр. Анна Петросян',phRoom:'напр. Комната 1',phPrice:'напр. 60000 AMD',phNotes:'Время прибытия, завтрак, оплачено или нет, пожелания…',phBy:'напр. Арам',save:'Сохранить бронь',saveCh:'Сохранить изменения',cancelEdit:'Отменить редактирование',all:'Все',up:'Предстоящие',past:'Прошедшие',empty:'Пока нет броней. Нажмите «+ Добавить», чтобы внести первую.',nights:'ночей',cancelled:'ОТМЕНЕНО',addedBy:'добавил(а)',clash:'⚠ Пересекается с другой бронью в той же комнате',edit:'Изменить',cancel:'Отменить',restore:'Вернуть',del:'Удалить',Direct:'Напрямую / Телефон',filterDirect:'Напрямую',fill:'Заполните имя гостя, даты и ваше имя.',order:'Дата выезда должна быть позже даты заезда.',clashQ:(r,g,p)=>`⚠ ${r||'Эта комната'} уже занята на эти даты: ${g} (${p}). Всё равно сохранить?`,notConn:'Нет соединения. Войдите в систему снова.',saveErr:'Не удалось сохранить. Попробуйте ещё раз.',permErr:'Не удалось изменить бронь. Попробуйте ещё раз.',delQ:'Удалить эту бронь полностью?',delErr:'Не удалось удалить. Попробуйте ещё раз.',cancelQ:'Отменить эту бронь?',restoreQ:'Вернуть эту бронь?',genericErr:'Что-то пошло не так. Попробуйте ещё раз.',serverOffline:'Не удалось подключиться к серверу. Убедитесь, что приложение запущено.',loggedOut:'Вы вышли',logout:'Выйти',owner:'Владелец',staff:'Сотрудник',userTitle:'Выполнен вход как',theme:'Тема',system:'Системная',light:'Светлая',dark:'Тёмная',login:'Войти',username:'Имя пользователя',password:'Пароль',firstRun:'Создайте аккаунт владельца',setupSub:'Это выполняется один раз при первом запуске. После этого владелец может добавить сотрудников.',yourName:'Имя владельца',createOwner:'Создать аккаунт владельца',loginError:'Неверное имя пользователя или пароль.',setupError:'Не удалось завершить настройку. Проверьте поля и попробуйте снова.',pwRule:'Пароль должен содержать минимум 8 символов.',userRule:'Имя пользователя: 3–40 букв, цифр, точки, подчёркивания или дефиса.',installHint:'На телефоне используйте меню браузера «Добавить на главный экран».',howTeam:'Для владельца: как пригласить команду',teamDesc:'Создайте здесь аккаунт сотрудника и передайте ему имя пользователя и временный пароль. Сотрудник сможет войти с телефона и использовать общий список.',addStaff:'Добавить сотрудника',staffName:'Имя сотрудника',staffUser:'Имя пользователя',tempPw:'Временный пароль',createStaff:'Создать аккаунт сотрудника',teamEmpty:'Сотрудников пока нет.',usernameTaken:'Это имя пользователя уже используется.',staffCreated:'Аккаунт сотрудника создан.',pwReset:'Изменить пароль',newPw:'Новый пароль',changePw:'Сохранить новый пароль',passwordChanged:'Пароль изменён.',passwordCopied:'Данные для входа скопированы.',copyCreds:'Скопировать данные',help:`<h3>Что это?</h3><p>Один общий список всех броней гостевого дома со всех платформ. Когда кто-то добавляет бронь, все видят её сразу. Больше не нужно писать в WhatsApp.</p><h3>Как добавить бронь</h3><ol><li>Нажмите <b>+ Добавить</b>.</li><li>Укажите имя гостя, даты заезда и выезда и <b>платформу</b>, откуда пришла бронь.</li><li>Добавьте комнату, цену, телефон и заметки, если они есть.</li><li>Впишите своё имя и нажмите <b>Сохранить бронь</b>.</li></ol><p>Если эта комната уже занята на выбранные даты, появится красное предупреждение. Проверьте его перед сохранением, чтобы не было двойной брони.</p><h3>Изменение или отмена</h3><ul><li><b>Изменить</b>: исправить любые данные брони.</li><li><b>Отменить</b>: бронь помечается как отменённая (зачёркнута), и все знают, что даты снова свободны. Бронь не удаляется.</li><li><b>Удалить</b>: полностью убирает. Только для ошибок.</li></ul><h3>Поиск броней</h3><p>Кнопки платформ вверху списка показывают брони только одной платформы. <b>Предстоящие</b>: сегодняшние и будущие заезды; <b>Прошедшие</b>: завершённые.</p><h3>Правила для всех</h3><ul><li>Вносите бронь <b>сразу, как получили её</b>, с любой платформы.</li><li>Если гость отменил или поменял даты, сразу обновите это здесь.</li><li>Смотрите список перед тем, как принять новую бронь.</li></ul><h3>Для владельца: как пригласить команду</h3><p>Откройте вкладку <b>Команда</b>, создайте аккаунт сотрудника и передайте ему имя пользователя и временный пароль. Каждый сотрудник входит под своим аккаунтом, а все видят один общий список в реальном времени.</p>`},
+ hy:{title:'Դիլիջանի հյուրատան ամրագրումներ',connecting:'Միացում…',live:'✅ Բոլորը տեսնում են նույն ցանկը',reconnecting:'Վերամիացում…',tList:'Ամրագրումներ',tAdd:'+ Ավելացնել',tHelp:'Ինչպես օգտվել',tTeam:'Թիմ',newB:'Նոր ամրագրում',editB:'Ամրագրման խմբագրում',guest:'Հյուրի անուն *',cin:'Ժամանում *',cout:'Մեկնում *',plat:'Հարթակ *',room:'Սենյակ',ng:'Հյուրերի քանակ',price:'Գին (ընդհանուր)',phone:'Հյուրի հեռախոս / կոնտակտ',notes:'Նշումներ',by:'Ձեր անունը (ով է գրանցում) *',phGuest:'օր.՝ Աննա Պետրոսյան',phRoom:'օր.՝ Սենյակ 1',phPrice:'օր.՝ 60000 AMD',phNotes:'Ժամանման ժամը, նախաճաշ, վճարված է թե ոչ, հատուկ խնդրանքներ…',phBy:'օր.՝ Արամ',save:'Պահպանել ամրագրումը',saveCh:'Պահպանել փոփոխությունները',cancelEdit:'Չեղարկել խմբագրումը',all:'Բոլորը',up:'Գալիք',past:'Անցած',empty:'Այստեղ դեռ ամրագրումներ չկան։ Սեղմեք «+ Ավելացնել»՝ առաջինը գրանցելու համար։',nights:'գիշեր',cancelled:'ՉԵՂԱՐԿՎԱԾ',addedBy:'ավելացրել է՝',clash:'⚠ Համընկնում է նույն սենյակի մեկ այլ ամրագրման հետ',edit:'Խմբագրել',cancel:'Չեղարկել',restore:'Վերականգնել',del:'Ջնջել',Direct:'Անմիջապես / Հեռախոս',filterDirect:'Անմիջապես',fill:'Լրացրեք հյուրի անունը, ամսաթվերը և ձեր անունը։',order:'Մեկնման օրը պետք է լինի ժամանումից հետո։',clashQ:(r,g,p)=>`⚠ ${r||'Այս սենյակը'} այս օրերին արդեն զբաղված է՝ ${g} (${p})։ Այնուամենայնիվ պահպանե՞լ։`,notConn:'Կապ չկա։ Մուտք գործեք նորից։',saveErr:'Չհաջողվեց պահպանել։ Փորձեք նորից։',permErr:'Չհաջողվեց փոփոխել ամրագրումը։ Փորձեք նորից։',delQ:'Ամբողջությամբ ջնջե՞լ այս ամրագրումը։',delErr:'Չհաջողվեց ջնջել։ Փորձեք նորից։',cancelQ:'Չեղարկե՞լ այս ամրագրումը։',restoreQ:'Վերականգնե՞լ այս ամրագրումը։',genericErr:'Ինչ-որ բան սխալ է։ Փորձեք նորից։',serverOffline:'Չհաջողվեց միանալ սերվերին։ Համոզվեք, որ հավելվածը գործարկված է։',loggedOut:'Դուք դուրս եկաք համակարգից',logout:'Դուրս գալ',owner:'Տեր',staff:'Աշխատակից',userTitle:'Մուտք գործած է՝',theme:'Թեմա',system:'Համակարգային',light:'Բաց',dark:'Մուգ',login:'Մուտք գործել',username:'Օգտանուն',password:'Գաղտնաբառ',firstRun:'Ստեղծեք տիրոջ հաշիվը',setupSub:'Սա կատարվում է առաջին գործարկման ժամանակ։ Դրանից հետո տերը կարող է ավելացնել աշխատակիցների։',yourName:'Տիրոջ անունը',createOwner:'Ստեղծել տիրոջ հաշիվ',loginError:'Սխալ օգտանուն կամ գաղտնաբառ։',setupError:'Կարգավորումը չհաջողվեց։ Ստուգեք դաշտերը և փորձեք նորից։',pwRule:'Գաղտնաբառը պետք է լինի առնվազն 8 նիշ։',userRule:'Օգտանուն՝ 3–40 տառ, թիվ, կետ, ընդգծում կամ գծիկ։',installHint:'Հեռախոսում օգտագործեք բրաուզերի ընտրացանկը՝ «Ավելացնել գլխավոր էկրանին»։',howTeam:'Տիրոջ համար՝ ինչպես հրավիրել թիմին',teamDesc:'Այստեղ ստեղծեք աշխատակցի հաշիվը և նրան տվեք օգտանունն ու ժամանակավոր գաղտնաբառը։ Նա կկարողանա հեռախոսից մուտք գործել և օգտագործել ընդհանուր ցանկը։',addStaff:'Ավելացնել աշխատակցի',staffName:'Աշխատակցի անուն',staffUser:'Աշխատակցի օգտանուն',tempPw:'Ժամանակավոր գաղտնաբառ',createStaff:'Ստեղծել աշխատակցի հաշիվ',teamEmpty:'Դեռ աշխատակիցներ չկան։',usernameTaken:'Այս օգտանունն արդեն օգտագործվում է։',staffCreated:'Աշխատակցի հաշիվը ստեղծվեց։',pwReset:'Փոխել գաղտնաբառը',newPw:'Նոր գաղտնաբառ',changePw:'Պահպանել նոր գաղտնաբառը',passwordChanged:'Գաղտնաբառը փոխվեց։',passwordCopied:'Մուտքի տվյալները պատճենվեցին։',copyCreds:'Պատճենել տվյալները',help:`<h3>Ի՞նչ է սա</h3><p>Բոլոր հարթակների հյուրատան ամրագրումների մեկ ընդհանուր ցանկ։ Երբ որևէ մեկը ավելացնում է ամրագրում, բոլորը անմիջապես տեսնում են այն։ Այլևս պետք չէ գրել WhatsApp-ում։</p><h3>Ինչպես ավելացնել ամրագրում</h3><ol><li>Սեղմեք <b>+ Ավելացնել</b>։</li><li>Լրացրեք հյուրի անունը, ժամանման և մեկնման ամսաթվերը և <b>հարթակը</b>, որտեղից եկել է ամրագրումը։</li><li>Ավելացրեք սենյակը, գինը, հեռախոսը և նշումները, եթե ունեք։</li><li>Գրեք ձեր անունը և սեղմեք <b>Պահպանել ամրագրումը</b>։</li></ol><p>Եթե այդ սենյակն այդ օրերին արդեն զբաղված է, կհայտնվի կարմիր նախազգուշացում։ Ստուգեք այն պահպանելուց առաջ, որ կրկնակի ամրագրում չլինի։</p><h3>Փոխել կամ չեղարկել</h3><ul><li><b>Խմբագրել</b>՝ ուղղել ամրագրման ցանկացած տվյալ։</li><li><b>Չեղարկել</b>՝ ամրագրումը նշվում է որպես չեղարկված (գծանշված), և բոլորը գիտեն, որ օրերը նորից ազատ են։ Ամրագրումը չի ջնջվում։</li><li><b>Ջնջել</b>՝ ամբողջությամբ հեռացնում է։ Միայն սխալների դեպքում։</li></ul><h3>Գտնել ամրագրումներ</h3><p>Ցանկի վերևի հարթակների կոճակներով կտեսնեք միայն մեկ հարթակի ամրագրումները։ <b>Գալիք</b>՝ այսօրվա և ապագա մնալները, <b>Անցած</b>՝ ավարտվածները։</p><h3>Կանոններ բոլորի համար</h3><ul><li>Ամրագրումը ավելացրեք <b>ստանալուն պես</b>՝ ցանկացած հարթակից։</li><li>Եթե հյուրը չեղարկում է կամ փոխում է ամսաթվերը, անմիջապես թարմացրեք այստեղ։</li><li>Նոր ամրագրում ընդունելուց առաջ նայեք ցանկին։</li></ul><h3>Տիրոջ համար՝ ինչպես հրավիրել թիմին</h3><p>Բացեք <b>Թիմ</b> ներդիրը, ստեղծեք աշխատակցի հաշիվ և նրան տվեք օգտանունն ու ժամանակավոր գաղտնաբառը։ Յուրաքանչյուր աշխատակից մուտք է գործում իր հաշիվով, իսկ բոլորը տեսնում են նույն ցանկը իրական ժամանակում։</p>`}
+};
+let lang=localStorage.getItem('gh_lang')||'en'; if(!L[lang])lang='en';
+let theme=localStorage.getItem('gh_theme')||'system';
+let state={view:'list',filter:'All',scope:'upcoming',editId:null,bookings:[],me:null,team:[],initialized:true,events:null,loading:false};
+const T=k=>L[lang][k]??L.en[k];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=d=>{const [y,m,dd]=(d||'').split('-'); return dd+'.'+m+'.'+y};
+const nights=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const platformLabel=p=>p==='Direct'?T('Direct'):p;
+const platformFilterLabel=p=>p==='Direct'?T('filterDirect'):p;
+function overlaps(b,ex){return state.bookings.filter(o=>o.id!==ex&&o.status!=='cancelled'&&o.room&&b.room&&o.room.trim().toLowerCase()===b.room.trim().toLowerCase()&&o.checkIn<b.checkOut&&b.checkIn<o.checkOut)}
+function applyTheme(){document.documentElement.dataset.theme=theme==='system'?'':theme; if(theme==='system')document.documentElement.removeAttribute('data-theme');}
+function toast(msg){const x=$('toast');x.textContent=msg;x.classList.remove('hidden');clearTimeout(toast._t);toast._t=setTimeout(()=>x.classList.add('hidden'),2400)}
+function api(url,opts={}){return fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opts.headers||{})},...opts}).then(async r=>{let d=null;try{d=await r.json()}catch{} if(!r.ok){const e=new Error(d?.error||'http');e.status=r.status;e.data=d;throw e}return d});}
+function render(){applyTheme(); if(!state.me){renderAuth();return;} renderApp();}
+function header(){return `<div class="hd"><h1>🏡 ${esc(T('title'))}</h1><div class="hd-actions"><div class="theme">${['system','light','dark'].map(k=>`<button class="${theme===k?'on':''}" data-theme="${k}">${esc(T(k))}</button>`).join('')}</div><div class="lang">${[['hy','ՀԱՅ'],['en','ENG'],['ru','РУС']].map(([k,v])=>`<button class="${lang===k?'on':''}" data-lang="${k}">${v}</button>`).join('')}</div></div></div>`}
+function renderApp(){
+  const role=state.me.role==='owner';
+  $('app').innerHTML=`<div class="wrap">${header()}<div class="status" id="status">${esc(state.loading?T('connecting'):T('live'))}</div><div class="toolbar-line"><span class="user-pill">${esc(T('userTitle'))}: ${esc(state.me.name)} · ${esc(T(state.me.role))}</span><button class="btn sec" id="logoutBtn">${esc(T('logout'))}</button></div><div class="tabs"><button id="tab-list" class="${state.view==='list'?'on':''}">${esc(T('tList'))}</button><button id="tab-add" class="${state.view==='add'?'on':''}">${esc(T('tAdd'))}</button><button id="tab-help" class="${state.view==='help'?'on':''}">${esc(T('tHelp'))}</button>${role?`<button id="tab-team" class="${state.view==='team'?'on':''}">${esc(T('tTeam'))}</button>`:''}</div><section id="view-list" class="${state.view==='list'?'':'hidden'}"></section><section id="view-add" class="${state.view==='add'?'':'hidden'}"></section><section id="view-help" class="card help ${state.view==='help'?'':'hidden'}"></section><section id="view-team" class="${role&&state.view==='team'?'':'hidden'}"></section><div class="install">${esc(T('installHint'))}</div></div>`;
+  bindGlobal();
+  if(state.view==='list')renderList();
+  if(state.view==='add')renderForm();
+  if(state.view==='help')$('view-help').innerHTML=T('help');
+  if(state.view==='team')renderTeam();
+}
+function bindGlobal(){
+  document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;localStorage.setItem('gh_lang',lang);render();});
+  document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{theme=b.dataset.theme;localStorage.setItem('gh_theme',theme);render();});
+  $('logoutBtn').onclick=async()=>{await api('/api/logout',{method:'POST'});state.me=null;closeEvents();toast(T('loggedOut'));render();};
+  $('tab-list').onclick=()=>{state.view='list';state.editId=null;render();};
+  $('tab-add').onclick=()=>{state.view='add';state.editId=null;render();};
+  $('tab-help').onclick=()=>{state.view='help';render();};
+  if($('tab-team'))$('tab-team').onclick=()=>{state.view='team';render();loadTeam();};
+}
+function renderList(){
+  const t=today();
+  const items=state.bookings.filter(b=>state.filter==='All'||b.platform===state.filter);
+  const up=items.filter(b=>b.checkOut>=t).sort((a,b)=>a.checkIn.localeCompare(b.checkIn));
+  const past=items.filter(b=>b.checkOut<t).sort((a,b)=>b.checkIn.localeCompare(a.checkIn));
+  const list=state.scope==='upcoming'?up:past;
+  let h='<div class="filters"><button data-f="All" class="'+(state.filter==='All'?'on':'')+'">'+esc(T('all'))+'</button>';
+  for(const p of PLATS){h+=`<button data-f="${esc(p)}" class="${state.filter===p?'on':''}"><span class="filter-platform"><span class="mini-dot" style="background:${COLORS[p]}"></span>${esc(platformFilterLabel(p))}</span></button>`}
+  h+='</div><div class="filters"><button data-s="upcoming" class="'+(state.scope==='upcoming'?'on':'')+'">'+esc(T('up'))+' ('+up.length+')</button><button data-s="past" class="'+(state.scope==='past'?'on':'')+'">'+esc(T('past'))+' ('+past.length+')</button></div>';
+  if(!list.length) h+=`<div class="card empty mut">${esc(T('empty'))}</div>`;
+  for(const b of list){
+    const c=b.status==='cancelled', cl=overlaps(b,b.id).length>0, pk=b.platform;
+    h+=`<div class="card"><div class="top"><span class="name ${c?'cancel':''}">${esc(b.guest)}</span><span class="badge" style="background:${COLORS[pk]||'#555'}">${esc(platformLabel(pk))}</span></div><div class="${c?'cancel':''}">📅 ${fmt(b.checkIn)} → ${fmt(b.checkOut)} <span class="mut">(${nights(b.checkIn,b.checkOut)} ${esc(T('nights'))})</span></div><div class="mut">${b.room?'🛏 '+esc(b.room)+' · ':''}👥 ${esc(b.guests||'-')}${b.price?' · 💰 '+esc(b.price):''}${b.phone?' · 📞 '+esc(b.phone):''}</div>${b.notes?`<div class="mut">📝 ${esc(b.notes)}</div>`:''}<div class="mut" style="font-size:12px">${c?esc(T('cancelled'))+' · ':''}${esc(T('addedBy'))} ${esc(b.by||'?')}</div>${cl?`<div class="warn">${esc(T('clash'))}</div>`:''}<div class="acts"><button class="btn sec" data-e="${esc(b.id)}">${esc(T('edit'))}</button><button class="btn sec" data-c="${esc(b.id)}">${esc(c?T('restore'):T('cancel'))}</button><button class="btn sec danger" data-d="${esc(b.id)}">${esc(T('del'))}</button></div></div>`;
+  }
+  $('view-list').innerHTML=h;
+  $('view-list').onclick=handleListClick;
+}
+async function handleListClick(e){
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.f){state.filter=b.dataset.f;renderList();return}
+  if(b.dataset.s){state.scope=b.dataset.s;renderList();return}
+  if(b.dataset.e){state.editId=b.dataset.e;state.view='add';render();return}
+  if(b.dataset.c){const item=state.bookings.find(x=>x.id===b.dataset.c);if(!item)return;const ok=confirm(item.status==='cancelled'?T('restoreQ'):T('cancelQ'));if(!ok)return;try{await api('/api/bookings/'+encodeURIComponent(item.id)+'/status',{method:'PATCH',body:JSON.stringify({status:item.status==='cancelled'?'confirmed':'cancelled'})});}catch(e){toast(T('permErr'));}return}
+  if(b.dataset.d){if(!confirm(T('delQ')))return;try{await api('/api/bookings/'+encodeURIComponent(b.dataset.d),{method:'DELETE'});}catch(e){toast(T('delErr'));}}
+}
+function formStateFromInputs(){return {guest:$('f-guest').value.trim(),checkIn:$('f-in').value,checkOut:$('f-out').value,platform:$('f-plat').value,room:$('f-room').value.trim(),guests:$('f-n').value,price:$('f-price').value.trim(),phone:$('f-phone').value.trim(),notes:$('f-notes').value.trim(),by:$('f-by').value.trim()};}
+function renderForm(){
+  $('view-add').innerHTML=`<div class="card"><b>${esc(state.editId?T('editB'):T('newB'))}</b><label>${esc(T('guest'))}</label><input id="f-guest" placeholder="${esc(T('phGuest'))}"><div class="row"><div><label>${esc(T('cin'))}</label><input id="f-in" type="date"></div><div><label>${esc(T('cout'))}</label><input id="f-out" type="date"></div></div><div class="row"><div><label>${esc(T('plat'))}</label><select id="f-plat">${PLATS.map(p=>`<option value="${esc(p)}">${esc(platformLabel(p))}</option>`).join('')}</select></div><div><label>${esc(T('room'))}</label><input id="f-room" placeholder="${esc(T('phRoom'))}"></div></div><div class="row"><div><label>${esc(T('ng'))}</label><input id="f-n" type="number" min="1" value="2"></div><div><label>${esc(T('price'))}</label><input id="f-price" placeholder="${esc(T('phPrice'))}"></div></div><label>${esc(T('phone'))}</label><input id="f-phone" placeholder="+374 ..."><label>${esc(T('notes'))}</label><textarea id="f-notes" rows="3" placeholder="${esc(T('phNotes'))}"></textarea><label>${esc(T('by'))}</label><input id="f-by" placeholder="${esc(T('phBy'))}"><div id="formWarn" class="warn"></div><button class="btn" id="saveBtn">${esc(state.editId?T('saveCh'):T('save'))}</button><button class="btn sec ${state.editId?'':'hidden'}" id="cancelEdit" style="margin-top:10px">${esc(T('cancelEdit'))}</button></div>`;
+  let savedBy='';try{savedBy=localStorage.getItem('gh_by')||''}catch{}
+  const existing=state.editId?state.bookings.find(b=>b.id===state.editId):null;
+  $('f-by').value=existing?.by||savedBy||state.me.name;
+  if(existing){$('f-guest').value=existing.guest;$('f-in').value=existing.checkIn;$('f-out').value=existing.checkOut;$('f-plat').value=existing.platform;$('f-room').value=existing.room||'';$('f-n').value=existing.guests||'';$('f-price').value=existing.price||'';$('f-phone').value=existing.phone||'';$('f-notes').value=existing.notes||'';}
+  $('saveBtn').onclick=saveBooking;
+  $('cancelEdit').onclick=()=>{state.view='list';state.editId=null;render();};
+  ['f-room','f-in','f-out'].forEach(id=>$(id).addEventListener('input',()=>showFormOverlapWarning()));
+  showFormOverlapWarning();
+}
+function showFormOverlapWarning(){const f=formStateFromInputs();if(!f.room||!f.checkIn||!f.checkOut){$('formWarn').textContent='';return;}const cl=overlaps(f,state.editId);$('formWarn').textContent=cl.length?T('clash'):'';}
+async function saveBooking(){
+  const f=formStateFromInputs(),w=$('formWarn');
+  if(!f.guest||!f.checkIn||!f.checkOut||!f.by){w.textContent=T('fill');return}
+  if(f.checkOut<=f.checkIn){w.textContent=T('order');return}
+  try{localStorage.setItem('gh_by',f.by)}catch{}
+  try{
+    const url=state.editId?'/api/bookings/'+encodeURIComponent(state.editId):'/api/bookings';
+    const method=state.editId?'PUT':'POST';
+    await api(url,{method,body:JSON.stringify(f)});
+    state.view='list';state.editId=null;render();
+  }catch(e){
+    if(e.status===409&&e.data?.error==='overlap'){
+      const ob=e.data.booking;const msg=T('clashQ')(f.room,ob.guest,platformLabel(ob.platform));
+      if(confirm(msg)){try{const url=state.editId?'/api/bookings/'+encodeURIComponent(state.editId):'/api/bookings';const method=state.editId?'PUT':'POST';await api(url,{method,body:JSON.stringify({...f,forceOverlap:true})});state.view='list';state.editId=null;render();}catch(err){w.textContent=T('saveErr')}}
+      return;
+    }
+    if(e.status===401){state.me=null;closeEvents();render();return;}
+    w.textContent=e.status===400?(e.data?.error==='validation'?T('fill'):T('genericErr')):T('saveErr');
+  }
+}
+async function loadTeam(){if(state.me.role!=='owner')return;try{const d=await api('/api/team');state.team=d.users;renderTeam();}catch(e){toast(T('genericErr'));}}
+function renderTeam(){
+  const el=$('view-team');if(!el)return;
+  let list=state.team.filter(u=>u.role==='staff');
+  el.innerHTML=`<div class="card"><b>${esc(T('addStaff'))}</b><p class="mut">${esc(T('teamDesc'))}</p><label>${esc(T('staffName'))}</label><input id="staff-name"><label>${esc(T('staffUser'))}</label><input id="staff-user" autocomplete="off"><label>${esc(T('tempPw'))}</label><input id="staff-pw" type="text" autocomplete="new-password"><div class="small">${esc(T('userRule'))}<br>${esc(T('pwRule'))}</div><div id="teamWarn" class="error"></div><button class="btn" id="createStaffBtn">${esc(T('createStaff'))}</button><div id="newCreds"></div></div><div class="card"><b>${esc(T('tTeam'))}</b>${list.length?list.map(u=>`<div class="team-user"><div class="team-meta"><strong>${esc(u.name)}</strong><span class="role">@${esc(u.username)} · ${esc(T('staff'))}</span></div><button class="btn sec" data-rpw="${esc(u.id)}">${esc(T('pwReset'))}</button></div>`).join(''):`<div class="mut" style="padding-top:10px">${esc(T('teamEmpty'))}</div>`}</div>`;
+  $('createStaffBtn').onclick=createStaff;
+  el.querySelectorAll('[data-rpw]').forEach(b=>b.onclick=()=>rotatePassword(b.dataset.rpw));
+}
+async function createStaff(){const name=$('staff-name').value.trim(),username=$('staff-user').value.trim(),password=$('staff-pw').value;const w=$('teamWarn');w.textContent='';if(!name||!/^[A-Za-z0-9._-]{3,40}$/.test(username)||password.length<8){w.textContent=T('setupError');return;}try{await api('/api/team',{method:'POST',body:JSON.stringify({name,username,password})});$('staff-name').value='';$('staff-user').value='';$('staff-pw').value='';await loadTeam();$('newCreds').innerHTML=`<div class="success">${esc(T('staffCreated'))}</div><div class="copybox"><b>${esc(name)}</b><br>${esc(T('username'))}: ${esc(username)}<br>${esc(T('password'))}: ${esc(password)}<br><button class="btn sec" id="copyCreds" style="margin-top:8px">${esc(T('copyCreds'))}</button></div>`;$('copyCreds').onclick=async()=>{try{await navigator.clipboard.writeText(`${name}\n${username}\n${password}`);toast(T('passwordCopied'));}catch{}};}catch(e){if(e.status===409)w.textContent=T('usernameTaken');else w.textContent=T('genericErr');}}
+async function rotatePassword(id){const pw=prompt(T('newPw'));if(!pw)return;if(pw.length<8){alert(T('pwRule'));return;}try{await api('/api/team/rotate-password',{method:'POST',body:JSON.stringify({id,password:pw})});toast(T('passwordChanged'));}catch{toast(T('genericErr'));}}
+function renderAuth(){api('/api/setup').then(d=>{state.initialized=d.initialized;document.body.innerHTML=`<div class="auth-shell"><div class="auth">${header()}<div class="card">${d.initialized?`<h2>${esc(T('login'))}</h2><p class="subtitle">${esc(T('title'))}</p>`:`<h2>${esc(T('firstRun'))}</h2><p class="subtitle">${esc(T('setupSub'))}</p>`}${!d.initialized?`<label>${esc(T('yourName'))}</label><input id="a-name"><label>${esc(T('username'))}</label><input id="a-user" autocomplete="username"><div class="small">${esc(T('userRule'))}</div><label>${esc(T('password'))}</label><input id="a-pw" type="password" autocomplete="new-password"><div class="small">${esc(T('pwRule'))}</div><div id="authError" class="error"></div><button class="btn" id="setupBtn">${esc(T('createOwner'))}</button>`:`<label>${esc(T('username'))}</label><input id="a-user" autocomplete="username"><label>${esc(T('password'))}</label><input id="a-pw" type="password" autocomplete="current-password"><div id="authError" class="error"></div><button class="btn" id="loginBtn">${esc(T('login'))}</button>`}</div></div></div>`;
+  const btn=$(d.initialized?'loginBtn':'setupBtn');btn.onclick=async()=>{const er=$('authError');er.textContent='';if(d.initialized){try{const r=await api('/api/login',{method:'POST',body:JSON.stringify({username:$('a-user').value.trim(),password:$('a-pw').value})});state.me=r.user;await loadBookings();openEvents();state.view='list';render();}catch{er.textContent=T('loginError');}}else{const name=$('a-name').value.trim(),username=$('a-user').value.trim(),password=$('a-pw').value;if(!name||!/^[A-Za-z0-9._-]{3,40}$/.test(username)||password.length<8){er.textContent=T('setupError');return;}try{await api('/api/setup',{method:'POST',body:JSON.stringify({name,username,password})});const r=await api('/api/me');state.me=r.user;state.view='list';await loadBookings();openEvents();render();}catch{er.textContent=T('setupError');}}};
+  }).catch(()=>{document.body.innerHTML='<div class="auth-shell"><div class="auth"><div class="card">'+esc(T('serverOffline'))+'</div></div></div>'});}
+async function loadBookings(){state.loading=true;try{const d=await api('/api/bookings');state.bookings=d.bookings;}catch(e){if(e.status===401){state.me=null;}else{toast(T('genericErr'));}}finally{state.loading=false;}}
+function closeEvents(){if(state.events){state.events.close();state.events=null;}}
+function openEvents(){closeEvents();state.events=new EventSource('/api/events');state.events.onopen=()=>{if($('status'))$('status').textContent=T('live');};state.events.onmessage=async()=>{await loadBookings();if(state.view==='list'&&!$('view-list')?.classList.contains('hidden'))renderList();else if(state.view==='team')loadTeam();};state.events.onerror=()=>{if($('status'))$('status').textContent=T('reconnecting');};}
+async function boot(){
+  const me=await api('/api/me').catch(()=>({authenticated:false}));
+  if(me.authenticated){state.me=me.user;await loadBookings();openEvents();state.view='list';render();}
+  else renderAuth();
+}
+applyTheme();boot();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>

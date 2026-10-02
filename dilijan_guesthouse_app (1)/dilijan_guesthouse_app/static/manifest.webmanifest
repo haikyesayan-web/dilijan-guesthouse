@@ -1,0 +1,12 @@
+{
+  "name": "Dilijan Guesthouse Bookings",
+  "short_name": "Dilijan Bookings",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#2f6b4f",
+  "description": "Shared booking manager for Dilijan Guesthouse",
+  "icons": [
+    {"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

@@ -1,0 +1,12 @@
+services:
+  dilijan-guesthouse:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      GH_HOST: 0.0.0.0
+      GH_PORT: 8000
+      GH_COOKIE_SECURE: "1"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
